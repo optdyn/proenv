@@ -1,0 +1,8 @@
+# catch changes to files in .proenv to reload env changes on next prompt
+for wf in $(find "${REPO}/.proenv" -type f); do
+  watch_file "${wf}"
+done
+
+# this catches new file additions or deletions
+watch_file "${REPO}/.proenv"
+

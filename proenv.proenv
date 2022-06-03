@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+REPO="$(git rev-parse --show-toplevel)"
+
+mkdir -p ${REPO}/.proenv/etc
+mkdir -p ${REPO}/.proenv/bin
+mkdir -p ${REPO}/.proenv/share
+
+cat <<EOF > "${REPO}/.proenv/bin/proenv"
+#!/usr/bin/env bash
+echo just a test for now
+
+EOF
+chmod +x "${REPO}/.proenv/bin/proenv"
+
+cat <<EOF > "${REPO}/.envrc"
+REPO="${REPO}"
+export REPO
+
+PATH="\${REPO}/.proenv/bin:\$PATH"
+export PATH
+
+if [[ -f "\${REPO}/.proenv/etc/direnv" ]]; then
+  source "\${REPO}/.proenv/etc/direnv"
+fi
+
+EOF
+
+if [[ -f ${REPO}/.gitignore ]]; then
+  if [[ -z $(grep '.envrc' "${REPO}/.gitignore") ]]; then
+    echo '.envrc' >> "${REPO}/.gitignore"
+    GITIGNORE_CHANGED=1
+  fi
+  if [[ -z $(grep '.proenv' "${REPO}/.gitignore") ]]; then
+    echo '.proenv' >> "${REPO}/.gitignore"
+    GITIGNORE_CHANGED=1
+  fi
+else
+  echo '.envrc' >> "${REPO}/.gitignore"
+  echo '.proenv' >> "${REPO}/.gitignore"
+  GITIGNORE_CHANGED=1
+fi
+
+if [[ 1 == $GITIGNORE_CHANGED ]]; then
+  git add "${REPO}/.gitignore"
+  git commit -m 'proenv.proenv adding .envrc and .proenv to .gitignore' \
+    "${REPO}/.gitignore"
+fi
+
+direnv allow "${REPO}"
+
