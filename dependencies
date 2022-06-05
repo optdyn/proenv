@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+if [[ ! -x /usr/local/bin/brew ]]; then
+  echo "No fun without brew! Install it then try again."
+  exit 1
+fi
+
+dependencies=(bash direnv gnu-sed dialog coreutils)
+
+if [[ 'Darwin' == $(uname -s) ]]; then
+  echo "Installing brew packages on macOS:"
+  for pkg in "${dependencies[@]}"; do
+    if brew list ${pkg} &>/dev/null; then
+      echo -e "\tbrew ${pkg}..\t\tinstalled"
+    else
+      brew install ${pkg}
+    fi
+  done
+fi
