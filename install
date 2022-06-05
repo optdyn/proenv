@@ -2,7 +2,9 @@
 
 REPO="$(git rev-parse --show-toplevel)"
 
-mkdir -p ${REPO}/.proenv/etc
+mkdir -p "${REPO}/.proenv/etc"
+cp "${REPO}/.git/etc/direnv" "${REPO}/.proenv/etc/direnv"
+
 mkdir -p ${REPO}/.proenv/bin
 mkdir -p ${REPO}/.proenv/share
 
