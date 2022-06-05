@@ -2,11 +2,12 @@
 
 ## Git Template
 
-The entire proenv git project acts as a git template when cloning target repositories. That means its contents are copied into the cloned repository's "${repo}/.git" folder. As a result, the `hooks` directory is fetched into "${repo}/.git/hooks".
+The entire proenv git project acts as a git template when cloning target repositories. That means its contents are copied into the cloned repository's `${repo}/.git` folder. As a result, the `hooks` directory is fetched into `${repo}/.git/hooks`.
+
+> ***But this is deleted ..***
 
 ## One Time post-checkout Execution
 
-With the `hooks` directory feteched into the cloned repository's "${repo}/.git/hooks", the `post-checkout` hook script is invoked once the clone operation finishes. This incarnation of the script runs only once to set up the repository to use proenv, its permanent hooks, and invoke the post-clone mimicing hook script.
+With the `hooks` directory fetched into the cloned repository's `${repo}/.git/hooks` directory, this temporary `post-checkout` hook script is invoked once the clone operation finishes. This incarnation of the script runs only once to set up the repository and proenv: the `.proenv` folder, permanent hooks in `.githooks`, and invoke the post-clone pseudo hook scripts in `post-clone.d`.
 
-The post-checkout script runs once because it deletes itself while executing. While executing it deletes this `hooks` directory which contains it. It links the "${repo}/.git/hooks" to the "${repo}/.githooks" directory which is created if not found.
-
+The `post-checkout` script runs once because it deletes itself while removing the `${repo}/.git/hooks` directory where it was originally fetched. Then `${repo}/.git/hooks` is soft linked to the `${repo}/.githooks` directory which is created if not found.
