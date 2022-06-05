@@ -11,7 +11,7 @@ echo "proenv:: clone $@" >&2
 teardown() {
     rm -rf "${template}"
 }
-trap teardown EXIT
+# trap teardown EXIT
 
 init() {
     cd "${template}"
@@ -27,6 +27,7 @@ main() {
     git clone --template="${template}" "$@"
 }
 
-init # &>/dev/null
+# init &>/dev/null
+init
 main "$@"
 
