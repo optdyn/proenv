@@ -6,3 +6,10 @@ done
 # this catches new file additions or deletions
 watch_file "${REPO}/.proenv"
 
+if [[ -d ${REPO}/.proenv/etc ]]; then
+  for envfile in "${REPO}"/.proenv/etc/*; do
+    [[ ${REPO}/.proenv/etc/direnv  == ${envfile} ]] && continue
+    source ${envfile}
+  done
+fi
+

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Written by Eric Crosson
+# 2016-10-12
+#
+# This hook can be used to save metadata about where a git repository
+# is cloned locally.  The intent is to use this information in other
+# scripts that operate on the cloned git repository.
+# path to the newly cloned repo on disk
+
+readonly repo=$(git rev-parse --show-toplevel)
+
+main() {
+    rm -rf -- "${repo}/.git/hooks"
+    initializeSubmodules
+    installClonedReposHooks
+    invokeClonedReposPostCloneHook
+}
+
+initializeSubmodules() {
+    git submodule update --init --recursive
+}
+
+installClonedReposHooks() {
+    cd "${repo}/.git"
+    rm -rf hooks
+
+    # if missing create .githooks w/ dot.d structure from proenv/share/hooks
+    if [[ ! -d ${repo}/.githooks ]]; then
+      cp -rf "${repo}/.git/share/hooks" "${repo}/.githooks"
+      echo "proenv:: add/commit newly created .githooks dot.d structure" >&2
+    fi
+
+    ln -sf ../.githooks ./hooks
+    cd - >/dev/null
+}
+
+invokeClonedReposPostCloneHook() {
+  if [[ -d ${repo}/.git/hooks/post-clone.d ]]; then
+    for pc in $(find ${repo}/.git/hooks/post-clone.d -mindepth 1); do
+      [[ -x ${pc} ]] && ${pc}
+    done
+  else
+    local -r post_clone_hook="${repo}/.git/hooks/post-clone"
+    test ! -e "${post_clone_hook}" && return
+    chmod u+x "${post_clone_hook}"
+    ${post_clone_hook}
+  fi
+}
+
+main "$@"
+

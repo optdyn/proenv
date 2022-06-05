@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Written by Eric Crosson
+# 2017-01-28
+#
+# This script clones the proenv template and applies it to the
+# target repository.
+
+readonly template=$(mktemp -d /tmp/proenv.XXXXX)
+
+teardown() {
+    rm -rf "${template}"
+}
+trap teardown EXIT
+
+init() {
+    cd "${template}"
+    git init
+    git remote add origin https://github.com/optdyn/proenv.git
+    git fetch origin
+    git checkout --track origin/master
+    cd -
+}
+
+main() {
+    git clone --template="${template}" "$@"
+}
+
+init &>/dev/null
+main "$@"
+
