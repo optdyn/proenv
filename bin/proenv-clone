@@ -11,7 +11,7 @@ echo "proenv:: clone $@ with template ${template}" >&2
 teardown() {
     rm -rf "${template}"
 }
- trap teardown EXIT
+trap teardown EXIT
 
 init() {
     cd "${template}"
