@@ -8,6 +8,7 @@
 # path to the newly cloned repo on disk
 
 readonly repo=$(git rev-parse --show-toplevel)
+echo "proenv:: setting up ${repo}" >&2
 
 main() {
     rm -rf -- "${repo}/.git/hooks"
