@@ -1,0 +1,3 @@
+# mod-short-name mod-repo-name base-repo-url branch
+proenv proenv https://github.com/optdyn main
+test proenv-test-module https://github.com/optdyn main
