@@ -8,10 +8,10 @@ fi
 dependencies=(bash direnv gnu-sed dialog coreutils)
 
 if [[ 'Darwin' == $(uname -s) ]]; then
-  echo "Installing brew packages on macOS:"
+  echo "Check and install brew dependencies if missing:"
   for pkg in "${dependencies[@]}"; do
     if brew list ${pkg} &>/dev/null; then
-      echo -e "\tbrew ${pkg}..\t\tinstalled"
+      echo -e "\tbrew ${pkg}..\t\talready installed"
     else
       brew install ${pkg}
     fi
