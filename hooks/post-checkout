@@ -40,13 +40,9 @@ installClonedReposHooks() {
       rm -rf "${repo}/.git/share/hooks"
     fi
 
+    cd "${repo}"
     "${repo}/.git/install"
-
-    if [[ 'yes' == $do_push ]]; then
-      cd "${repo}"
-      git push
-      cd "${repo}/.git"
-    fi
+    cd "${repo}/.git"
 
     ln -sf ../.githooks ./hooks
     cd - >/dev/null
