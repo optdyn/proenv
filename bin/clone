@@ -6,7 +6,7 @@
 # target repository.
 
 readonly template=$(mktemp -d /tmp/proenv.XXXXX)
-echo "proenv:: clone $@ with template ${template}" >&2
+#echo "proenv:: clone $@ with template ${template}" >&2
 
 teardown() {
     rm -rf "${template}"
@@ -20,14 +20,14 @@ init() {
     git fetch origin
     git checkout --track origin/main
     cd -
-  echo "proenv:: template checkout out to ${template}" >&2
+#  echo "proenv:: template checkout out to ${template}" >&2
 }
 
 main() {
     git clone --template="${template}" "$@"
 }
 
-# init &>/dev/null
-init
+init &>/dev/null
+#init
 main "$@"
 
