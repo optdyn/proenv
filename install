@@ -6,14 +6,10 @@ mkdir -p "${REPO}/.proenv/etc"
 cp "${REPO}/.git/etc/direnv" "${REPO}/.proenv/etc/direnv"
 
 mkdir -p ${REPO}/.proenv/bin
-mkdir -p ${REPO}/.proenv/share
+cp "${REPO}/.git/bin/proenv-clone" "${REPO}/.proenv/bin/proenv-clone"
+chmod +x "${REPO}/.proenv/bin/proenv-clone"
 
-cat <<EOF > "${REPO}/.proenv/bin/proenv"
-#!/usr/bin/env bash
-echo just a test for now
-
-EOF
-chmod +x "${REPO}/.proenv/bin/proenv"
+mkdir -p ${REPO}/.proenv/share/modules
 
 cat <<EOF > "${REPO}/.envrc"
 REPO="${REPO}"
