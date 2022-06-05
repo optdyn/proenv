@@ -35,7 +35,7 @@ installClonedReposHooks() {
       cd "${repo}/.git"
       echo "$msg" >&2
     else
-      rm -rf "${repo}/.git/share"
+      rm -rf "${repo}/.git/share/hooks"
     fi
 
     ln -sf ../.githooks ./hooks
