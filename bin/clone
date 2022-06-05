@@ -27,6 +27,6 @@ main() {
     git clone --template="${template}" "$@"
 }
 
-init &>/dev/null
+init # &>/dev/null
 main "$@"
 
