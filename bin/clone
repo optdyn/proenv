@@ -20,6 +20,7 @@ init() {
     git fetch origin
     git checkout --track origin/master
     cd -
+  echo "proenv:: template checkout out to ${template}" >&2
 }
 
 main() {
