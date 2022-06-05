@@ -6,6 +6,7 @@
 # target repository.
 
 readonly template=$(mktemp -d /tmp/proenv.XXXXX)
+echo "proenv:: clone $@" >&2
 
 teardown() {
     rm -rf "${template}"
