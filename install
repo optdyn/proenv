@@ -43,8 +43,9 @@ fi
 
 if [[ 1 == $GITIGNORE_CHANGED ]]; then
   git add "${REPO}/.gitignore"
-  git commit -m 'proenv.proenv adding .envrc and .proenv to .gitignore' \
+  git commit -m 'proenv install adding .envrc and .proenv to .gitignore' \
     "${REPO}/.gitignore"
+  git push
 fi
 
 direnv allow "${REPO}"
