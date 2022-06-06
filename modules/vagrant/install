@@ -34,6 +34,25 @@ if [[ 'Darwin' == $(uname -s) ]]; then
     fi
   done 
 
+  valid_providers=()
+  case "${#valid_providers[@]}" in
+    0)
+	echo "No valid providers found, exiting.."
+	exit 1
+	;;
+
+    1)
+	echo "One provider found, using ${valid_providers[0]}.."
+        echo "export VAGRANT_DEFAULT_PROVIDER=${valid_providers[0]}" \
+	  > "${REPO}/.proenv/etc/vagrant"
+	exit 0
+	;;
+
+    *)
+        echo "Multiple providers found, requesting input.."
+	;;
+  esac
+
   items=""
   for ii in "${!valid_providers[@]}"; do
     items="$items $ii ${valid_providers[ii]}"
