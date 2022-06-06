@@ -7,7 +7,7 @@
 # scripts that operate on the cloned git repository.
 # path to the newly cloned repo on disk
 
-readonly REPO=$(git rev-parse --show-toplevel)
+REPO=$(git rev-parse --show-toplevel)
 echo "proenv:: setting up ${REPO}" >&2
 
 main() {
