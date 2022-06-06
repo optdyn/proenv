@@ -10,7 +10,7 @@ REPO="$(git rev-parse --show-toplevel)"
 mv -f "${REPO}/.git/etc" "${REPO}/.proenv"
 mv -f "${REPO}/.git/modules" "${REPO}/.proenv"
 mv -f "${REPO}/.git/bin" "${REPO}/.proenv"
-ls -F "${REPO}/.proenv/bin/*"
+ls -rF "${REPO}/.proenv"
 chmod +x "${REPO}/.proenv/bin/*"
 
 # create .envrc
