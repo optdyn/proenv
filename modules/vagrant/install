@@ -34,7 +34,7 @@ if [[ 'Darwin' == $(uname -s) ]]; then
     fi
   done 
 
-  valid_providers=()
+  valid_providers=("vmware_desktop")
   case "${#valid_providers[@]}" in
     0)
 	echo "No valid providers found, exiting.."
