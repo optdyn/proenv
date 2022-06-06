@@ -7,6 +7,8 @@
 REPO="$(git rev-parse --show-toplevel)"
 
 mkdir -p "${REPO}/.proenv"
+cp -f "${REPO}/.git/proenv.head" "${REPO}/.proenv/HEAD"
+[[ 0 == $? ]] && rm -rf "${REPO}/.git/proenv.head"
 
 # move cloned template assets from .git to .proenv
 cp -rf "${REPO}/.git/etc" "${REPO}/.proenv/etc"
