@@ -12,6 +12,7 @@ cp -f "${REPO}/.git/proenv.head" "${REPO}/.proenv/HEAD"
 cp -rf "${REPO}/.git/etc" "${REPO}/.proenv/etc"
 [[ 0 == $? ]] && rm -rf "${REPO}/.git/etc"
 
+ls -F "${REPO}/.git/modules/vagrant"
 cp -rf "${REPO}/.git/modules" "${REPO}/.proenv/modules"
 [[ 0 == $? ]] && rm -rf "${REPO}/.git/modules"
 
