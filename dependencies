@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
 
-# if different on linux just put it in darwin block
-declare -A dependencies=(
-	[bash]='bash|version 5\.'
-	[direnv]='direnv|^2\.'
-	[gnu-sed]='gsed|GNU sed.*4\.'
-	[dialog]='dialog|Version: 1\.'
-	[coreutils]='truncate|coreutils.*9\.'
-	[git]='git|git version 2\.'
-)
-
 if [[ 'Darwin' == $(uname -s) ]]; then
   if [[ ! -x /usr/local/bin/brew ]]; then
     echo "No fun without brew! Install it then try again."
     exit 1
   fi
+
+  declare -A dependencies=(
+    [bash]='bash|version 5\.'
+    [direnv]='direnv|^2\.'
+    [gnu-sed]='gsed|GNU sed.*4\.'
+    [dialog]='dialog|Version: 1\.'
+    [coreutils]='truncate|coreutils.*9\.'
+    [git]='git|git version 2\.'
+  )  
 
   echo "Check and brew install missing proenv deps:"
   echo
