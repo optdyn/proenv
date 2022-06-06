@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-dependencies=(
+declare -A dependencies=(
 	[bash]='bash|version 5\.'
 	[direnv]='direnv|^2\.'
 	[gnu-sed]='gsed|GNU gsed.*\4.'
