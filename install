@@ -63,7 +63,7 @@ if [[ 1 == $GITIGNORE_CHANGED ]]; then
 fi
 
 # execute dependencies and direnv register repository's .envrc
-$(dirname $0)/dependencies
+source $(dirname $0)/dependencies
 direnv allow "${REPO}"
 
 # cleanup .git directory from template assets
