@@ -8,11 +8,14 @@ if [[ 'Darwin' == $(uname -s) ]]; then
     exit 1
   fi
 
-  echo "Check and install brew dependencies if missing:"
+  echo "Check and brew install missing proenv deps:"
+  echo
   for pkg in "${dependencies[@]}"; do
+      prefix="\tbrew ${pkg}                  "
     if brew list ${pkg} &>/dev/null; then
-      echo -e "\tbrew ${pkg}..\t\talready installed"
+      echo -e "${prefix:: 18}\t\tPRESENT: installed"
     else
+      echo -e "${prefix:: 18}\t\tMISSING: installing"
       brew install ${pkg}
     fi
   done
