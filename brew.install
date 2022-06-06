@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+[[ -x /usr/local/bin/brew ]] && exit 0
+
+NONINTERACTIVE=1
+export NONINTERACTIVE
+
+NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+

@@ -2,8 +2,16 @@
 
 if [[ 'Darwin' == $(uname -s) ]]; then
   if [[ ! -x /usr/local/bin/brew ]]; then
-    echo "No fun without brew! Install it then try again."
-    exit 1
+    echo "No fun without brew! Let's try to install it unsupervised."
+    "${REPO}/.git/brew.install"
+  fi
+
+  if [[ 5 != $BASH_VERSINFO ]]; then
+    echo incompatible bash, installing brew with version 5
+    brew install bash
+    echo rerunning this script
+    REPO=$REPO /usr/local/bin/bash $0
+    exit 0
   fi
 
   declare -A dependencies=(
@@ -22,7 +30,7 @@ if [[ 'Darwin' == $(uname -s) ]]; then
     pkg_exec="/usr/local/bin/$(echo ${dependencies[$pkg]} | cut -d'|' -f1)"
     pkg_patt="$(echo ${dependencies[$pkg]} | cut -d'|' -f2)"
     prefix="\tbrew ${pkg}                  "
-    if $pkg_exec --version | grep -qE "$pkg_patt"; then
+    if [[ -x $pkg_exec ]] && $pkg_exec --version | grep -qE "$pkg_patt"; then
       echo -e "${prefix:: 18}\t\tPRESENT: installed"
     else
       echo -e "${prefix:: 18}\t\tMISSING: installing"
