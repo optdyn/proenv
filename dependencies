@@ -3,7 +3,7 @@
 declare -A dependencies=(
 	[bash]='bash|version 5\.'
 	[direnv]='direnv|^2\.'
-	[gnu-sed]='gsed|GNU gsed.*\4.'
+	[gnu-sed]='gsed|GNU sed.*\4.'
 	[dialog]='dialog|Version: 1\.'
 	[coreutils]='truncate|coreutils.*9\.'
 )
