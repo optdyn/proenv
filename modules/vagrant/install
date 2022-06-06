@@ -34,6 +34,7 @@ if [[ 'Darwin' == $(uname -s) ]]; then
     fi
   done 
 
+  echo
   case "${#valid_providers[@]}" in
     0)
 	echo "No valid providers found, exiting.."
