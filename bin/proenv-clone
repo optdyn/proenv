@@ -5,11 +5,16 @@
 # This script clones the proenv template and applies it to the
 # target repository.
 
-readonly template=$(mktemp -d /tmp/proenv.XXXXX)
+if [[ -d ${HOME}/.proenv ]]; then
+  template="${HOME}/.proenv"
+else
+  template=$(mktemp -d /tmp/proenv.XXXXX)
+fi
+
 echo "proenv:: clone $@ with template ${template}" >&2
 
 teardown() {
-    rm -rf "${template}"
+    [[ "${HOME}/.proenv" != ${template} ]] && rm -rf "${template}"
 }
 trap teardown EXIT
 
