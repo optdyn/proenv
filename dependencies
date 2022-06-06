@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-dependencies=(bash direnv gnu-sed dialog coreutils)
+dependencies=(
+	[bash]='bash|version 5\.'
+	[direnv]='direnv|^2\.'
+	[gnu-sed]='gsed|GNU gsed.*\4.'
+	[dialog]='dialog|Version: 1\.'
+	[coreutils]='truncate|coreutils.*9\.'
+)
 
 if [[ 'Darwin' == $(uname -s) ]]; then
   if [[ ! -x /usr/local/bin/brew ]]; then
@@ -10,9 +16,11 @@ if [[ 'Darwin' == $(uname -s) ]]; then
 
   echo "Check and brew install missing proenv deps:"
   echo
-  for pkg in "${dependencies[@]}"; do
-      prefix="\tbrew ${pkg}                  "
-    if brew list ${pkg} &>/dev/null; then
+  for pkg in "${!dependencies[@]}"; do
+    pkg_exec="/usr/local/bin/$(echo ${dependencies[$pkg]} | cut -d'|' -f1)"
+    pkg_patt="$(echo ${dependencies[$pkg]} | cut -d'|' -f2)"
+    prefix="\tbrew ${pkg}                  "
+    if $pkg_exec --version | grep -e "$pkg_patt"; then
       echo -e "${prefix:: 18}\t\tPRESENT: installed"
     else
       echo -e "${prefix:: 18}\t\tMISSING: installing"
