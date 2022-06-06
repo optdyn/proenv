@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-readonly repo="$(git rev-parse --show-toplevel)"
+readonly REPO="$(git rev-parse --show-toplevel)"
 exec_dotd() {
-  readonly pc_dir="${repo}/.git/hooks/${1}.d"
+  readonly pc_dir="${REPO}/.git/hooks/${1}.d"
   shift # removes ${1} param used above by the calling hook
   if [[ -d ${pc_dir} ]]; then
     for pc in $(find "${pc_dir}" -mindepth 1); do
-      [[ -x ${pc} ]] && ${pc} $@
+      [[ -x ${pc} ]] && REPO="${REPO}" ${pc} $@
     done
   fi
 }

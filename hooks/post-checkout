@@ -28,11 +28,7 @@ installClonedReposHooks() {
     do_push=no
     # if missing create .githooks w/ dot.d structure from proenv/share/hooks
     if [[ ! -d ${REPO}/.githooks ]]; then
-      echo source hooks
-      ls -FR "${REPO}/.git/share/hooks"
       mv -f "${REPO}/.git/share/hooks" "${REPO}/.githooks"
-      ls -FR "${REPO}/.githooks"
-      echo destination hooks
       msg='proenv:: add/commit/push .githooks dot.d structure'
       cd "${REPO}"
       git add "${REPO}/.githooks"
@@ -57,13 +53,13 @@ installClonedReposHooks() {
 invokeClonedReposPostCloneHook() {
   if [[ -d ${REPO}/.git/hooks/post-clone.d ]]; then
     for pc in $(find ${REPO}/.git/hooks/post-clone.d -mindepth 1); do
-      [[ -x ${pc} ]] && ${pc}
+      [[ -x ${pc} ]] && REPO="${REPO}" ${pc}
     done
   else
     local -r post_clone_hook="${REPO}/.git/hooks/post-clone"
     test ! -e "${post_clone_hook}" && return
     chmod u+x "${post_clone_hook}"
-    ${post_clone_hook}
+    REPO="${REPO}" ${post_clone_hook}
   fi
 }
 
