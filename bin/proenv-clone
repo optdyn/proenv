@@ -19,6 +19,7 @@ init() {
     git remote add origin https://github.com/optdyn/proenv.git
     git fetch origin
     git checkout --track origin/main
+    git ls-remote --quiet | grep HEAD | cut -f1 > proenv.head
     cd -
     echo "proenv:: template checkout out to ${template}" >&2
 }
