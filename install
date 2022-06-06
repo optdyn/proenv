@@ -55,7 +55,17 @@ if [[ 1 == $GITIGNORE_CHANGED ]]; then
 fi
 
 # execute dependencies and direnv register repository's .envrc
+FAIL_FAST=1
 REPO="${REPO}" $(dirname $0)/dependencies
+if [[ 0 != $? ]]; then
+  echo "proenv::install dependencies ${pc} failed"
+  if [[ 1 == $FAIL_FAST ]]; then
+    echo "FAIL_FAST is enabled, exiting"
+    exit 1
+  else
+    echo "FAIL_FAST is disabled"
+  fi
+fi
 direnv allow "${REPO}"
 
 # cleanup .git directory from template assets

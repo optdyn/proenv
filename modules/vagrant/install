@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
+[[ ! -x /usr/local/bin/brew ]] && echo 'no brew, exit' && exit 1
 [[ -z $REPO ]] && echo 'REPO undefined' >&2 && exit 1
 [[ ! -f ${REPO}/Vagrantfile ]] && exit 0
 
 if [[ 'Darwin' == $(uname -s) ]]; then
   VAGRANT_EXEC="$(which vagrant)"
   if [[ -z $VAGRANT_EXEC ]]; then
-    echo "proenv:: vagrant not found installing with brew" >&2
+    echo "proenv::vagrant::install vagrant not found installing with brew" >&2
     brew install vagrant
     VAGRANT_EXEC='/usr/local/bin/vagrant'
   elif [[ '/usr/local/bin/vagrant' != $VAGRANT_EXEC ]]; then

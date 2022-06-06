@@ -50,10 +50,21 @@ installClonedReposHooks() {
     cd - >/dev/null
 }
 
+FAIL_FAST=1
 invokeClonedReposPostCloneHook() {
   if [[ -d ${REPO}/.git/hooks/post-clone.d ]]; then
     for pc in $(find ${REPO}/.git/hooks/post-clone.d -mindepth 1); do
+      echo "proenv::post-clone:: \${pc}='${pc}'"
       [[ -x ${pc} ]] && REPO="${REPO}" ${pc}
+      if [[ 0 != $? ]]; then
+        echo "proenv::post-clone:: \${pc}=${pc} failed"
+        if [[ 1 == $FAIL_FAST ]]; then
+          echo "FAIL_FAST is enabled, exiting"
+          return 1
+        else
+          echo "FAIL_FAST is disabled"
+        fi
+      fi
     done
   else
     local -r post_clone_hook="${REPO}/.git/hooks/post-clone"

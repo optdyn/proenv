@@ -1,9 +1,21 @@
 #!/usr/bin/env bash
 
+FAIL_FAST=1
 if [[ 'Darwin' == $(uname -s) ]]; then
   if [[ ! -x /usr/local/bin/brew ]]; then
-    echo "No fun without brew! Let's try to install it unsupervised."
+    echo "proenv::dependencies:: No fun without brew! Let's try to install it unsupervised."
+    # unlock access as root to avoid passwords after this
+    echo -e "$USER \tALL="'(ALL) '"\tNOPASSWD: ALL" | sudo tee -a /etc/sudoers
     "${REPO}/.git/brew.install"
+    if [[ 0 != $? ]]; then
+      echo "proenv::dependencies:: brew.install failed"
+      if [[ 1 == $FAIL_FAST ]]; then
+        echo "proenv::dependencies:: FAIL_FAST is enabled, exiting"
+        exit 1
+      else
+        echo "proenv::dependencies:: FAIL_FAST is disabled"
+      fi
+    fi
   fi
 
   if [[ 5 != $BASH_VERSINFO ]]; then

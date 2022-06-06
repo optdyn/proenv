@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+FAIL_FAST=1
+
 readonly REPO="$(git rev-parse --show-toplevel)"
 exec_dotd() {
   readonly pc_dir="${REPO}/.git/hooks/${1}.d"
@@ -7,6 +9,15 @@ exec_dotd() {
   if [[ -d ${pc_dir} ]]; then
     for pc in $(find "${pc_dir}" -mindepth 1); do
       [[ -x ${pc} ]] && REPO="${REPO}" ${pc} $@
+      if [[ 0 != $? ]]; then
+        echo "proenv::common:: post-clone ${pc} failed"
+        if [[ 1 == $FAIL_FAST ]]; then
+          echo "FAIL_FAST is enabled, exiting"
+          return 1
+        else
+          echo "FAIL_FAST is disabled"
+        fi
+      fi
     done
   fi
 }
