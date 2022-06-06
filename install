@@ -7,9 +7,9 @@
 REPO="$(git rev-parse --show-toplevel)"
 
 # move cloned template assets from .git to .proenv
-mv -f "${REPO}/.git/etc" "${REPO}/.proenv"
-mv -f "${REPO}/.git/modules" "${REPO}/.proenv"
-mv -f "${REPO}/.git/bin" "${REPO}/.proenv"
+mv -f "${REPO}/.git/etc" "${REPO}/.proenv/etc"
+mv -f "${REPO}/.git/modules" "${REPO}/.proenv/modules"
+mv -f "${REPO}/.git/bin" "${REPO}/.proenv/bin"
 
 # create .envrc
 cat <<EOF > "${REPO}/.envrc"
