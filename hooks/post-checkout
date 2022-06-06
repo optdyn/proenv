@@ -7,11 +7,12 @@
 # scripts that operate on the cloned git repository.
 # path to the newly cloned repo on disk
 
-readonly repo=$(git rev-parse --show-toplevel)
-echo "proenv:: setting up ${repo}" >&2
+readonly REPO=$(git rev-parse --show-toplevel)
+export REPO
+echo "proenv:: setting up ${REPO}" >&2
 
 main() {
-    rm -rf -- "${repo}/.git/hooks"
+    rm -rf -- "${REPO}/.git/hooks"
     initializeSubmodules
     installClonedReposHooks
     invokeClonedReposPostCloneHook
@@ -22,28 +23,28 @@ initializeSubmodules() {
 }
 
 installClonedReposHooks() {
-    cd "${repo}/.git"
+    cd "${REPO}/.git"
     rm -rf hooks
 
     do_push=no
     # if missing create .githooks w/ dot.d structure from proenv/share/hooks
-    if [[ ! -d ${repo}/.githooks ]]; then
-      mv -f "${repo}/.git/share/hooks" "${repo}/.githooks"
+    if [[ ! -d ${REPO}/.githooks ]]; then
+      mv -f "${REPO}/.git/share/hooks" "${REPO}/.githooks"
       msg='proenv:: add/commit/push .githooks dot.d structure'
-      cd "${repo}"
-      git add "${repo}/.githooks"
+      cd "${REPO}"
+      git add "${REPO}/.githooks"
       git commit -m "$msg"
       git push
-      cd "${repo}/.git"
+      cd "${REPO}/.git"
       echo "$msg" >&2
     else
-      rm -rf "${repo}/.git/share/hooks"
+      rm -rf "${REPO}/.git/share/hooks"
     fi
 
     # invoke proenv install script
-    cd "${repo}"
-    "${repo}/.git/install"
-    cd "${repo}/.git"
+    cd "${REPO}"
+    source "${REPO}/.git/install"
+    cd "${REPO}/.git"
 
     # now link hooks
     ln -sf ../.githooks ./hooks
@@ -51,12 +52,12 @@ installClonedReposHooks() {
 }
 
 invokeClonedReposPostCloneHook() {
-  if [[ -d ${repo}/.git/hooks/post-clone.d ]]; then
-    for pc in $(find ${repo}/.git/hooks/post-clone.d -mindepth 1); do
+  if [[ -d ${REPO}/.git/hooks/post-clone.d ]]; then
+    for pc in $(find ${REPO}/.git/hooks/post-clone.d -mindepth 1); do
       [[ -x ${pc} ]] && ${pc}
     done
   else
-    local -r post_clone_hook="${repo}/.git/hooks/post-clone"
+    local -r post_clone_hook="${REPO}/.git/hooks/post-clone"
     test ! -e "${post_clone_hook}" && return
     chmod u+x "${post_clone_hook}"
     ${post_clone_hook}

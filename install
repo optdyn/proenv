@@ -4,7 +4,13 @@
 # Invoked by hooks/post-checkout
 # After .githooks created, before hooks (registered) link setup
 
-REPO="$(git rev-parse --show-toplevel)"
+if [[ -z $REPO ]]; then
+  REPO="$(git rev-parse --show-toplevel)"
+  export REPO
+  echo "proenv:: defining REPO=${REPO}"
+else
+  echo "proenv:: alreaded defined REPO=${REPO}"
+fi
 
 mkdir -p "${REPO}/.proenv"
 cp -f "${REPO}/.git/proenv.head" "${REPO}/.proenv/HEAD"
