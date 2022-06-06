@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-if [[ ! -x /usr/local/bin/brew ]]; then
-  echo "No fun without brew! Install it then try again."
-  exit 1
-fi
-
 dependencies=(bash direnv gnu-sed dialog coreutils)
 
 if [[ 'Darwin' == $(uname -s) ]]; then
+  if [[ ! -x /usr/local/bin/brew ]]; then
+    echo "No fun without brew! Install it then try again."
+    exit 1
+  fi
+
   echo "Check and install brew dependencies if missing:"
   for pkg in "${dependencies[@]}"; do
     if brew list ${pkg} &>/dev/null; then

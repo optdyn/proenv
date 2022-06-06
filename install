@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 
+# Installs proenv creating ${REPO}/.proenv structures
+# Invoked by hooks/post-checkout
+# After .githooks created, before hooks (registered) link setup
+
 REPO="$(git rev-parse --show-toplevel)"
 
-mkdir -p "${REPO}/.proenv/etc"
-cp "${REPO}/.git/etc/direnv" "${REPO}/.proenv/etc/direnv"
+# move cloned template assets from .git to .proenv
+mv -f "${REPO}/.git/etc" "${REPO}/.proenv"
+mv -f "${REPO}/.git/modules" "${REPO}/.proenv"
+mv -f "${REPO}/.git/bin" "${REPO}/.proenv"
+chmod +x "${REPO}/.proenv/bin/*"
 
-mkdir -p ${REPO}/.proenv/bin
-cp "${REPO}/.git/bin/proenv-clone" "${REPO}/.proenv/bin/proenv-clone"
-chmod +x "${REPO}/.proenv/bin/proenv-clone"
-
-mkdir -p ${REPO}/.proenv/share/modules
-
+# create .envrc
 cat <<EOF > "${REPO}/.envrc"
 REPO="${REPO}"
 export REPO
@@ -46,6 +48,13 @@ if [[ 1 == $GITIGNORE_CHANGED ]]; then
   git push
 fi
 
+# execute dependencies and direnv register repository's .envrc
 $(dirname $0)/dependencies
 direnv allow "${REPO}"
+
+# cleanup .git directory from template assets
+rm -f "${REPO}/.git/Readme.md"
+rm -f "${REPO}/.git/dependencies"
+rm -f "${REPO}/.git/install"
+rm -rf "${REPO}/.git/share"
 

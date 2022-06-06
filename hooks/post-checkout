@@ -28,8 +28,8 @@ installClonedReposHooks() {
     do_push=no
     # if missing create .githooks w/ dot.d structure from proenv/share/hooks
     if [[ ! -d ${repo}/.githooks ]]; then
-      cp -rf "${repo}/.git/share/hooks" "${repo}/.githooks"
-      msg='proenv:: add/commit newly created .githooks dot.d structure'
+      mv -f "${repo}/.git/share/hooks" "${repo}/.githooks"
+      msg='proenv:: add/commit/push .githooks dot.d structure'
       cd "${repo}"
       git add "${repo}/.githooks"
       git commit -m "$msg"
@@ -40,10 +40,12 @@ installClonedReposHooks() {
       rm -rf "${repo}/.git/share/hooks"
     fi
 
+    # invoke proenv install script
     cd "${repo}"
     "${repo}/.git/install"
     cd "${repo}/.git"
 
+    # now link hooks
     ln -sf ../.githooks ./hooks
     cd - >/dev/null
 }
