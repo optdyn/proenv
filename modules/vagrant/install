@@ -1,3 +1,53 @@
 #!/usr/bin/env bash
 
+[[ -z $REPO ]] && echo 'REPO undefined' >&2 && exit 1
+[[ ! -f ${REPO}/Vagrantfile ]] && exit 0
+
+if [[ 'Darwin' == $(uname -s) ]]; then
+  VAGRANT_EXEC="$(which vagrant)"
+  if [[ -z $VAGRANT_EXEC ]]; then
+    echo "proenv:: vagrant not found installing with brew" >&2
+    brew install vagrant
+    VAGRANT_EXEC='/usr/local/bin/vagrant'
+  elif [[ '/usr/local/bin/vagrant' != $VAGRANT_EXEC ]]; then
+    echo "proenv:: Non-brew $VAGRANT_EXEC found"
+    # what to do besides complaining? keep using it?
+  fi
+
+  readarray -t plugins < <(vagrant plugin list | grep -E '^vagrant-' | cut -d' ' -f1)
+  declare -a valid_providers
+  macos_hypervisors=("VMware Fusion" "Parallels Desktop" "VirtualBox")
+  declare -A macos_vagrant_providers
+  macos_vagrant_providers=([VMware Fusion]=vmware_desktop [Parallels Desktop]=parallels [VirtualBox]=virtualbox)
+  declare -A macos_vagrant_plugins
+  macos_vagrant_plugins=([VMware Fusion]="vagrant-vmware-desktop" [Parallels Desktop]="vagrant-parallels" [VirtualBox]="")
+
+  for hypervisor in "${macos_hypervisors[@]}"; do
+    if [[ -d /Applications/${hypervisor}.app ]]; then
+      plugin="${macos_vagrant_plugins[${hypervisor}]}"
+      provider="${macos_vagrant_providers[${hypervisor}]}"
+      if [[ -z $plugin ]] && [[ 'VirtualBox' = $hypervisor ]]; then
+        valid_providers+=("$provider")
+      elif [[ " ${plugins[@]} " =~ " ${plugin} " ]]; then
+	valid_providers+=("$provider")
+      fi
+    fi
+  done 
+
+  items=""
+  for ii in "${!valid_providers[@]}"; do
+    items="$items $ii ${valid_providers[ii]}"
+  done
+
+  selected="$(dialog --stdout \
+	--title 'Multiple Vagrant Providers Detected' \
+	--menu 'Select the vagrant provider to use:' 15 55 5 $items)"
+
+  [[ $? == 255 ]] && exit 255
+  [[ -z $selected ]] && exit 200
+
+  # now add VAGRANT_DEFAULT_PROVIDER to .proenv/etc/vagrant
+  echo "export VAGRANT_DEFAULT_PROVIDER=${valid_providers[$selected]}" \
+	  > "${REPO}/.proenv/etc/vagrant"
+fi
 
