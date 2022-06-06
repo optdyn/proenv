@@ -8,7 +8,6 @@
 # path to the newly cloned repo on disk
 
 readonly REPO=$(git rev-parse --show-toplevel)
-export REPO
 echo "proenv:: setting up ${REPO}" >&2
 
 main() {
@@ -43,7 +42,7 @@ installClonedReposHooks() {
 
     # invoke proenv install script
     cd "${REPO}"
-    source "${REPO}/.git/install"
+    REPO="${REPO}" "${REPO}/.git/install"
     cd "${REPO}/.git"
 
     # now link hooks
