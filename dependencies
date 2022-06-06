@@ -20,7 +20,7 @@ if [[ 'Darwin' == $(uname -s) ]]; then
     pkg_exec="/usr/local/bin/$(echo ${dependencies[$pkg]} | cut -d'|' -f1)"
     pkg_patt="$(echo ${dependencies[$pkg]} | cut -d'|' -f2)"
     prefix="\tbrew ${pkg}                  "
-    if $pkg_exec --version | grep -E "$pkg_patt"; then
+    if $pkg_exec --version | grep -qE "$pkg_patt"; then
       echo -e "${prefix:: 18}\t\tPRESENT: installed"
     else
       echo -e "${prefix:: 18}\t\tMISSING: installing"
