@@ -54,3 +54,29 @@ if [[ 'Darwin' == $(uname -s) ]]; then
   [[ 0 != ${#missing[@]} ]] && brew install ${missing[@]}
 fi
 
+# add shell hooks for direnv
+[[ ! -f ${HOME}/.bashrc ]] && touch "${HOME}/.bashrc"
+[[ ! -f ${HOME}/.zshrc ]] && touch "${HOME}/.zshrc"
+
+if grep -q 'direnv hook' "${HOME}/.bashrc"; then
+  echo "Hook present in ${HOME}/.bashrc"
+else
+  echo "Adding hook to ${HOME}/.bashrc"
+  echo                                     >> "${HOME}/.bashrc"
+  echo 'if [[ -n $(which direnv) ]]; then' >> "${HOME}/.bashrc"
+  echo '  eval "$(direnv hook bash)"'      >> "${HOME}/.bashrc"
+  echo 'fi'                                >> "${HOME}/.bashrc"
+  echo                                     >> "${HOME}/.bashrc"
+fi
+
+if grep -q 'direnv hook' "${HOME}/.zshrc"; then
+  echo "Hook present in ${HOME}/.zshrc"
+else
+  echo "Adding hook to ${HOME}/.zshrc"
+  echo                                     >> "${HOME}/.zshrc"
+  echo 'if [[ -n $(which direnv) ]]; then' >> "${HOME}/.zshrc"
+  echo '  eval "$(direnv hook zsh)"'       >> "${HOME}/.zshrc"
+  echo 'fi'                                >> "${HOME}/.zshrc"
+  echo                                     >> "${HOME}/.zshrc"
+fi
+
