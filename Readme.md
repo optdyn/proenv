@@ -68,3 +68,24 @@ These default hooks allow for multiple scripts to be launched per hook in `${hoo
 #### No `post-clone` Hook Script
 
 Notice that unlike the other hook scripts, there is no executable `post-clone` script, however, a `post-clone.d` directory does exists. This is because post-clone, remember, is a pseudo-hook. Git does not have such a hook so there is no use for such a file. Furthermore, scripts in `post-clone.d` are only invoked one time, at clone-time, by a temporary post-checkout script that runs only once after the clone operation. The scripts in `post-clone.d` never again execute.
+
+## Fast Test
+
+Real PITA to commit every little bit to try and test. Do the following to prevent this need:
+
+```shell
+git clone https://github.com/optdyn/proenv.git ~/.proenv
+ln -s ~/.proenv/bin/proenv-clone ~/.local/bin/proenv-clone
+```
+
+> If `~/.local/bin` is not on your PATH make sure it is
+
+Then don't curl pipe bash, instead use the following line replacing the project git url:
+
+```shell
+rm -rf proenv-project
+proenv-clone https://github.com/optdyn/proenv-project.git
+```
+
+> If using zsh, issue a `rehash` before executing the above
+
